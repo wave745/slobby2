@@ -127,7 +127,7 @@ export class SnailRacer {
   update(deltaTime) {
     // Check for new token buys to trigger floating text
     if (this.tokenBuys > this.lastTokenBuys) {
-      this.game.audioManager.playSound('swoosh', 0.6);
+      // Audio removed
       this.speedBoost = 10; // Add a significant visual speed boost
       this.slimeTrail.triggerGlow();
       this.boostTrail.trigger(this.group.position);
@@ -143,7 +143,7 @@ export class SnailRacer {
     const spikeFactor = 1.5; // 50% increase
     if (this.volume > this.lastVolume * spikeFactor && this.volume > volumeThreshold && this.lastVolume > 0) {
       this.volumeSpikeScale = 1.5; // Start scale for the burst effect
-      this.game.audioManager.playSound('whoosh', 0.7);
+      // Audio removed
       this.lastVolume = this.volume;
     } else if (this.volume > this.lastVolume) {
       // Update volume even if it's not a spike, so we have a baseline for the next check

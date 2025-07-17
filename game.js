@@ -6,7 +6,6 @@ import { UI } from './ui.js';
 import { FinishLineFX } from './finishLineFX.js';
 import { SlimeTrail } from './slimeTrail.js';
 import { CameraManager } from './cameraManager.js';
-import { AudioManager } from './audioManager.js';
 import { DayNightCycleManager } from './dayNightCycle.js';
 import { WeatherManager } from './weather.js';
 import { PlayerParticleEffect } from './playerParticleEffect.js';
@@ -22,8 +21,6 @@ export class Game {
     this.cameraManager = null;
     this.finishLineFX = null;
     this.playerSnail = null;
-    this.audioManager = null;
-    this.backgroundAudio = null;
     this.dayNightCycleManager = null;
     this.weatherManager = null;
     this.ambientLight = null;
@@ -64,11 +61,6 @@ export class Game {
     this.setupLighting();
     
     // Initialize managers
-    this.audioManager = new AudioManager(this.camera);
-    // Setup audio asynchronously - don't block game initialization
-    this.setupAudio().catch(error => {
-      console.warn('Audio setup failed, but game will continue:', error);
-    });
     this.raceManager = new RaceManager(this);
     this.finishLineFX = new FinishLineFX();
     this.scene.add(this.finishLineFX.group);
@@ -83,30 +75,6 @@ export class Game {
     
     // Setup texture loading optimization
     this.setupTextureOptimization();
-  }
-  async setupAudio() {
-    // We already have a listener from AudioManager
-    this.backgroundAudio = new THREE.Audio(this.audioManager.listener);
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load(
-      'https://storage.googleapis.com/rosebud-labs-dev/assets/ambient-sci-fi-track.mp3',
-      (buffer) => {
-        this.backgroundAudio.setBuffer(buffer);
-        this.backgroundAudio.setLoop(true);
-        this.backgroundAudio.setVolume(0.3);
-      }
-    );
-    // Load our new sound effects
-    await this.audioManager.loadSounds([
-        { name: 'swoosh', url: 'https://storage.googleapis.com/rosebud-labs-dev/assets/swoosh_sfx.mp3' },
-        { name: 'whoosh', url: 'https://storage.googleapis.com/rosebud-labs-dev/assets/whoosh_sfx.mp3' },
-        { name: 'fanfare', url: 'https://storage.googleapis.com/rosebud-labs-dev/assets/fanfare_sfx.mp3' }
-    ]);
-  }
-  startAudio() {
-    if (this.backgroundAudio && this.backgroundAudio.buffer && !this.backgroundAudio.isPlaying) {
-      this.backgroundAudio.play();
-    }
   }
   setupLighting() {
     // Ambient light

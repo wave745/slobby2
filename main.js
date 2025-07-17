@@ -55,14 +55,7 @@ class SlobbyApp {
           document.getElementById('ui').style.display = 'block';
         }, 500);
         
-        // Try to start audio if game exists
-        try {
-          if (this.game && this.game.startAudio) {
-            this.game.startAudio();
-          }
-        } catch (audioError) {
-          console.warn('Could not start audio:', audioError);
-        }
+        // Audio removed for simplicity
       });
       console.log('Enter Arena button event listener added');
     } else {

@@ -137,7 +137,7 @@ export class CameraManager {
         new THREE.Vector3(0, 2, 45),    // Look towards finish line
         new THREE.Vector3(0, 0, 0)     // Hold look at center of track
     ]);
-    this.game.audioManager.playSound('whoosh', 0.8);
+    // Audio removed
     this.swoopTween = new TWEEN.Tween({ t: 0 })
       .to({ t: 1 }, 4000) // 4-second animation
       .easing(TWEEN.Easing.Cubic.InOut)

@@ -42,7 +42,7 @@ export class RaceManager {
     // Reset the trigger flag when a new race is about to start
     if (this.raceState === 'countdown' && oldState !== 'countdown') {
       // this.finishFXTriggered = false; // No longer needed
-      this.game.audioManager.playSound('whoosh', 0.5); // Countdown start sound
+      // Audio removed
     }
     // Reset winner visuals when the next race starts
     // Resetting winner visuals is no longer necessary as the race is continuous
@@ -65,7 +65,7 @@ export class RaceManager {
       const winner = state.racers.find(racer => racer.progress >= 1);
       if (winner && this.lastWinnerDisplayed !== winner.username) {
         this.game.ui.showWinnerPopup(winner.username, winner.displayToken || winner.token);
-        this.game.audioManager.playSound('fanfare', 0.8);
+        // Audio removed
         this.lastWinnerDisplayed = winner.username;
       }
       
