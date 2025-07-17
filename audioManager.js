@@ -33,8 +33,9 @@ export class AudioManager {
                     },
                     () => {}, // onProgress callback, not needed here
                     (error) => {
-                        console.error(`Failed to load sound: ${sound.name}`, error);
-                        reject(error);
+                        console.warn(`Failed to load sound: ${sound.name}`, error);
+                        // Don't reject - just resolve to continue loading other sounds
+                        resolve();
                     }
                 );
             });

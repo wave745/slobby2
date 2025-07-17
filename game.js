@@ -65,7 +65,10 @@ export class Game {
     
     // Initialize managers
     this.audioManager = new AudioManager(this.camera);
-    this.setupAudio(); // Now sets up background audio and loads SFX
+    // Setup audio asynchronously - don't block game initialization
+    this.setupAudio().catch(error => {
+      console.warn('Audio setup failed, but game will continue:', error);
+    });
     this.raceManager = new RaceManager(this);
     this.finishLineFX = new FinishLineFX();
     this.scene.add(this.finishLineFX.group);
@@ -270,14 +273,13 @@ export class Game {
       console.log('All textures loaded and optimized');
     };
     
-    // Set default texture parameters for better performance
-    const originalTextureLoader = THREE.TextureLoader;
-    THREE.TextureLoader = function(...args) {
-      const loader = new originalTextureLoader(...args);
-      const originalLoad = loader.load;
+    // Create a helper function for optimized texture loading instead of modifying THREE.TextureLoader
+    this.createOptimizedTextureLoader = () => {
+      const loader = new THREE.TextureLoader();
+      const originalLoad = loader.load.bind(loader);
       
       loader.load = function(url, onLoad, onProgress, onError) {
-        return originalLoad.call(this, url, (texture) => {
+        return originalLoad(url, (texture) => {
           // Optimize texture settings
           texture.generateMipmaps = false;
           texture.minFilter = THREE.LinearFilter;
