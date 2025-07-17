@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slobby - Memecoin Snail Racing</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #1a0033; /* Dark purple fallback */
+        background-image: url('https://play.rosebud.ai/assets/slobby.png?NSpY');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100vw;
+        font-family: 'Arial', sans-serif;
+        color: white;
+      }
+      
+      #gameContainer, #ui {
+        display: none; /* Initially hidden */
+      }
+      
+      #landingPage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(26, 0, 51, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 3000;
+        color: white;
+        animation: fadeIn 1s ease-in-out;
+        backdrop-filter: blur(10px);
+      }
+      
+      @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+      
+      .landing-content {
+          background: rgba(26, 0, 51, 0.85);
+          border: 2px solid #ff00ff;
+          border-radius: 15px;
+          padding: 30px 40px;
+          max-width: 90vw;
+          width: 600px;
+          box-shadow: 0 0 40px rgba(255, 0, 255, 0.6);
+          box-sizing: border-box;
+      }
+      .landing-logo {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          border: 3px solid #00ffff;
+          margin-bottom: 15px;
+          box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      }
+      .landing-content h1 {
+          font-size: 3.5rem;
+          color: #ff00ff;
+          text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00c1;
+          margin: 0;
+      }
+      .landing-tagline {
+          font-size: 1.2rem;
+          margin: 5px 0 20px 0;
+          color: #eee;
+      }
+      
+      .landing-about {
+          font-size: 1rem;
+          line-height: 1.5;
+          margin-bottom: 25px;
+          color: #ccc;
+      }
+      .landing-socials {
+          margin-bottom: 30px;
+      }
+      .landing-socials a {
+          color: #00ffff;
+          text-decoration: none;
+          margin: 0 15px;
+          font-weight: bold;
+          transition: all 0.3s;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+      }
+      .landing-socials a:hover {
+          transform: scale(1.1);
+          text-shadow: 0 0 10px #00ffff;
+      }
+      .social-icon {
+        width: 22px;
+        height: 22px;
+        /* The new logo doesn't need to be inverted */
+        transition: filter 0.3s;
+      }
+      .landing-socials a:hover .social-icon {
+        filter: drop-shadow(0 0 8px #00ffff);
+      }
+      
+      #gameContainer {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+      
+      #ui {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+      }
+      
+      .ui-element {
+        pointer-events: all;
+      }
+      
+      #setupPanel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(26, 0, 51, 0.9);
+        border: 2px solid #ff00ff;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+      }
+      
+      #loader {
+        display: none;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ff00ff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      #raceUI {
+        display: none;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #00ffff;
+        min-width: 220px;
+        min-width: 220px;
+      }
+      #chatBox {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: 300px;
+        height: 200px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ffff;
+        border-radius: 10px;
+        display: none;
+        flex-direction: column;
+      }
+      #chatMessages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 10px;
+        font-size: 14px;
+      }
+      #chatInputContainer {
+        display: flex;
+        border-top: 1px solid #00ffff44;
+        padding: 5px;
+      }
+      #chatInput {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        color: white;
+        padding: 5px;
+        outline: none;
+      }
+      #sendChatBtn {
+        background: #00ffff;
+        border: none;
+        color: #1a0033;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .chat-message {
+        margin-bottom: 5px;
+      }
+      .chat-message .username {
+        font-weight: bold;
+        color: #ff00ff;
+      }
+      
+      #leaderboard {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #ff00ff;
+        min-width: 200px;
+      }
+      
+      .input-field {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid #00ffff;
+        color: white;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      
+      .neon-button {
+        background: linear-gradient(45deg, #ff00c1, #ff9a00);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        margin: 10px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .neon-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 100, 200, 0.8);
+      }
+      
+      @keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(255, 100, 200, 0.7);
+        }
+        50% {
+            transform: scale(1.04);
+            box-shadow: 0 0 30px rgba(255, 100, 200, 0.9);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(255, 100, 200, 0.7);
+        }
+      }
+      
+      #quickSelectTokens {
+        margin: 10px 0;
+      }
+      .quick-select-btn {
+        background: rgba(0, 255, 255, 0.2);
+        border: 1px solid #00ffff;
+        color: white;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .quick-select-btn:hover {
+        background: rgba(0, 255, 255, 0.4);
+      }
+      #raceTimer {
+        font-size: 24px;
+        font-weight: bold;
+        color: #00ffff;
+        text-shadow: 0 0 10px #00ffff;
+      }
+      #countdown {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20vw;
+        font-weight: bold;
+        color: #ff00ff;
+        text-shadow: 0 0 15px #ff00ff, 0 0 40px #ff00ff, 0 0 70px #ff00c1;
+        display: none;
+        z-index: 2000;
+        animation: countdown-pulse 1s ease-out;
+        animation-iteration-count: infinite;
+      }
+      @keyframes countdown-pulse {
+        from {
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+      }
+      
+      .snail-entry {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+        padding: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+      }
+      .token-icon {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+        margin-right: 5px;
+        border-radius: 50%;
+      }
+      .leaderboard-name, .queue-name {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      #winnerPopup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 3000;
+        backdrop-filter: blur(5px);
+      }
+
+      .winner-content {
+        background: rgba(26, 0, 51, 0.5);
+        border: 3px solid #ffd700;
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+        animation: winnerSlideIn 0.8s ease-out;
+        max-width: 90vw;
+        width: 500px;
+      }
+
+      @keyframes winnerSlideIn {
+        from {
+          transform: scale(0.3) translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .winner-crown {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        animation: crownFloat 2s ease-in-out infinite;
+      }
+
+      @keyframes crownFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+
+      .winner-title {
+        font-size: 2.5rem;
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700;
+        margin: 0 0 10px 0;
+        font-weight: bold;
+      }
+
+      .winner-username {
+        font-size: 2rem;
+        color: #fff;
+        margin: 10px 0;
+        text-shadow: 0 0 15px #ff00ff;
+      }
+
+      .winner-token {
+        font-size: 1.5rem;
+        color: #00ffff;
+        margin: 10px 0;
+        text-shadow: 0 0 10px #00ffff;
+      }
+
+      @media (max-width: 768px) {
+        #setupPanel {
+          width: 90vw;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+        #setupPanel .input-field, #setupPanel .neon-button {
+          display: block;
+          width: calc(100% - 20px);
+          margin-left: auto;
+          margin-right: auto;
+        }
+        #raceUI {
+          width: auto;
+        }
+        #leaderboard {
+          top: auto;
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+          width: auto;
+          max-height: 35vh;
+          overflow-y: auto;
+        }
+        
+        .snail-entry span:nth-child(2) {
+            display: none; /* Hide token buys on mobile for cleaner look */
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://esm.sh/three@0.160.0?dev",
+          "three/": "https://esm.sh/three@0.160.0&dev/",
+          "tween.js": "https://esm.sh/@tweenjs/tween.js@21.0.0"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="landingPage">
+        <div class="landing-content">
+            <img src="https://play.rosebud.ai/assets/slobby.png?NSpY" alt="Slobby Logo" class="landing-logo">
+            <h1>SLOBBY</h1>
+            <p class="landing-tagline">Memecoin Snail Racing Championship</p>
+            <p class="landing-about">Useless racing game on Solana. Slobby is a degenerate snail that loves to race. Join the arena, rep your favorite memecoin, and watch the chaos unfold in a never-ending race for glory.</p>
+            <div class="landing-actions">
+              <div class="x-logo-row" style="display: flex; justify-content: center; margin-bottom: 40px;">
+                <a href="https://x.com/slobbyrace" target="_blank">
+                  <img src="https://cdn.simpleicons.org/x/white" alt="X Logo" class="social-icon" style="width: 28px; height: 28px;">
+                </a>
+              </div>
+              <div style="display: flex; justify-content: center;">
+                <button id="enterArenaBtn" class="neon-button" style="animation: pulse 2s infinite ease-in-out; margin-top: 30px;">
+                  Enter Arena
+                </button>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div id="gameContainer">
+      <div id="ui">
+        <div id="setupPanel" class="ui-element">
+          <h1 style="color: #ff00ff; text-shadow: 0 0 20px #ff00ff;">🐌 SLOBBY 🐌</h1>
+          <p>Memecoin Snail Racing Championship</p>
+          <input type="text" id="usernameInput" placeholder="Enter username" class="input-field">
+          <input type="text" id="tokenInput" placeholder="Enter Solana Token or Address" class="input-field">
+          <div id="quickSelectTokens" class="ui-element">
+            <button class="quick-select-btn" data-token="TROLL">TROLL</button>
+            <button class="quick-select-btn" data-token="AURA">AURA</button>
+            <button class="quick-select-btn" data-token="FARTCOIN">FARTCOIN</button>
+            <button class="quick-select-btn" data-token="GIGA">GIGA</button>
+          </div>
+          <div id="loader"></div>
+          <p id="setupError" style="color: #ff4444; display: none;"></p>
+          <div id="setupActions">
+            <button id="joinRaceBtn" class="neon-button">Join Race Queue</button>
+            <button id="spectateBtn" class="neon-button">Spectate</button>
+          </div>
+        </div>
+        
+        <div id="raceUI" class="ui-element">
+          <div id="raceTimer">Race starts in: 60s</div>
+          <div id="raceStatus">Waiting for players...</div>
+          <div id="spectatorCount" style="margin-top: 10px; color: #00ffff;">Spectators: 0</div>
+          <h4 style="color: #00ffff; margin-top: 15px; margin-bottom: 5px; border-top: 1px solid #00ffff44; padding-top: 10px;">In Queue</h4>
+          <div id="queueContent"></div>
+        </div>
+        <div id="chatBox" class="ui-element">
+            <div id="chatMessages"></div>
+            <div id="chatInputContainer">
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button id="sendChatBtn">Send</button>
+            </div>
+        </div>
+        
+        
+        <div id="leaderboard" class="ui-element" style="display: none;">
+          <h3 style="color: #ff00ff; margin-top: 0;">🏁 Live Race</h3>
+          <div id="leaderboardContent"></div>
+        </div>
+        
+        <div id="countdown" class="ui-element"></div>
+        
+        <div id="winnerPopup" class="ui-element">
+          <div class="winner-content">
+            <div class="winner-crown">👑</div>
+            <div class="winner-title">WINNER!</div>
+            <div class="winner-username" id="winnerUsernameDisplay"></div>
+            <div class="winner-token" id="winnerTokenDisplay"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="module" src="main.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/ChatManager.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/ImageGenerator.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/ProgressLogger.js"></script>
+    <script src="https://storage.googleapis.com/rosebud_staticfiles/OGP.js"></script>
+  </body>
+</html>

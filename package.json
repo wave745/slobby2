@@ -1,0 +1,30 @@
+{
+  "name": "slobby2",
+  "version": "1.0.0",
+  "description": "Memecoin Snail Racing Championship - Live Multiplayer Web Game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'Static files ready for deployment'",
+    "deploy": "echo 'Use: npm start to run the server'"
+  },
+  "keywords": [
+    "game",
+    "crypto",
+    "memecoin",
+    "racing",
+    "multiplayer",
+    "solana",
+    "real-time"
+  ],
+  "author": "SLOBBY2 Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
