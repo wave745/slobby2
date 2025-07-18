@@ -410,43 +410,63 @@
       }
 
       @media (max-width: 768px) {
+        /* Landing page mobile improvements */
+        .landing-content {
+          padding: 20px;
+          margin: 10px;
+          max-width: calc(100vw - 20px);
+        }
+        .landing-content h1 {
+          font-size: 2.5rem;
+        }
+        .landing-tagline {
+          font-size: 1rem;
+        }
+        .landing-about {
+          font-size: 0.9rem;
+        }
+        
+        /* Setup panel mobile */
         #setupPanel {
           width: 90vw;
           padding: 20px;
           box-sizing: border-box;
+          max-width: calc(100vw - 20px);
         }
         #setupPanel .input-field, #setupPanel .neon-button {
           display: block;
           width: calc(100% - 20px);
           margin-left: auto;
           margin-right: auto;
+          font-size: 14px;
         }
         
-        /* Mobile Race UI - Top left corner, compact */
+        /* Mobile Race UI - Top left corner, more compact */
         #raceUI {
           position: fixed;
-          top: 10px;
-          left: 10px;
+          top: 5px;
+          left: 5px;
           width: auto;
-          max-width: 200px;
-          padding: 8px;
-          font-size: 12px;
+          max-width: 180px;
+          padding: 6px;
+          font-size: 11px;
           z-index: 950;
+          background: rgba(0, 0, 0, 0.8);
         }
         
-        /* Mobile Leaderboard - Bottom center, compact */
+        /* Mobile Leaderboard - Bottom, full width, shorter */
         #leaderboard {
           position: fixed;
-          bottom: 160px; /* Above mobile controls */
-          left: 50%;
-          transform: translateX(-50%);
-          width: 90vw;
-          max-width: 300px;
-          max-height: 120px;
+          bottom: 10px;
+          left: 5px;
+          right: 5px;
+          width: calc(100vw - 10px);
+          max-height: 140px;
           overflow-y: auto;
           z-index: 950;
           padding: 8px;
-          font-size: 11px;
+          font-size: 12px;
+          background: rgba(0, 0, 0, 0.8);
         }
         
         /* Hide chat on mobile to reduce clutter */
@@ -454,48 +474,91 @@
           display: none !important;
         }
         
-        .snail-entry span:nth-child(2) {
-            display: none; /* Hide token buys on mobile for cleaner look */
+        /* Mobile countdown adjustments */
+        #countdown {
+          font-size: 15vw;
+          z-index: 2000;
         }
         
-        /* Ensure mobile controls don't interfere */
-        #mobile-game-controls {
-          z-index: 1000 !important;
+        /* Mobile winner popup */
+        .winner-content {
+          width: 90vw;
+          padding: 20px;
+          max-width: calc(100vw - 20px);
+        }
+        .winner-title {
+          font-size: 2rem;
+        }
+        .winner-username {
+          font-size: 1.5rem;
         }
         
         /* Adjust leaderboard entries for mobile */
         .snail-entry {
-          padding: 2px 4px;
-          margin: 1px 0;
-          font-size: 11px;
-          background: rgba(255, 255, 255, 0.05);
+          padding: 4px 6px;
+          margin: 2px 0;
+          font-size: 12px;
+          background: rgba(255, 255, 255, 0.1);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
         .token-icon {
-          width: 10px;
-          height: 10px;
+          width: 14px;
+          height: 14px;
         }
         
-        /* Make leaderboard header smaller */
+        /* Make leaderboard header more prominent on mobile */
         #leaderboard h3 {
-          font-size: 14px;
-          margin: 0 0 5px 0;
+          font-size: 16px;
+          margin: 0 0 8px 0;
+          text-align: center;
+          color: #ff00ff;
         }
         
         /* Make race UI more compact */
         #raceTimer {
-          font-size: 14px;
+          font-size: 12px;
+          font-weight: bold;
         }
         #raceStatus {
-          font-size: 11px;
+          font-size: 10px;
+          margin-top: 2px;
         }
         #spectatorCount {
-          font-size: 10px;
-          margin-top: 5px;
+          font-size: 9px;
+          margin-top: 3px;
         }
         
-        /* Hide queue on mobile to save space */
-        #raceUI h4, #queueContent {
-          display: none !important;
+        /* Show queue on mobile but make it compact */
+        #raceUI h4 {
+          font-size: 10px;
+          margin: 5px 0 3px 0;
+          border-top: 1px solid #00ffff44;
+          padding-top: 5px;
+        }
+        #queueContent {
+          font-size: 9px;
+        }
+        #queueContent .snail-entry {
+          padding: 1px 2px;
+          margin: 1px 0;
+          font-size: 9px;
+        }
+        #queueContent .token-icon {
+          width: 8px;
+          height: 8px;
+        }
+        
+        /* Ensure text is readable */
+        body {
+          font-size: 14px;
+          line-height: 1.4;
+        }
+        
+        /* Better mobile viewport handling */
+        .landing-content, #setupPanel, .winner-content {
+          box-sizing: border-box;
         }
       }
     </style>
