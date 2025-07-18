@@ -34,8 +34,14 @@ export class CameraManager {
     }
     switch (mode) {
       case 'initial':
-        this.camera.position.set(0, 15, -30);
-        this.camera.lookAt(0, 0, 0);
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          this.camera.position.set(0, 20, -40);
+          this.camera.lookAt(0, 0, 10);
+        } else {
+          this.camera.position.set(0, 15, -30);
+          this.camera.lookAt(0, 0, 0);
+        }
         break;
       case 'spectator':
         // Spectator logic is handled in update()
@@ -161,8 +167,15 @@ export class CameraManager {
     // Only run default camera logic if not in a swoop animation
     if (this.mode === 'spectator') {
       // Position camera behind the finish line for a full track view
-      this.camera.position.set(0, 25, 65);
-      this.camera.lookAt(0, 0, 0); // Look at the center of the track
+      // Adjust for mobile screens to capture more of the track
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        this.camera.position.set(0, 35, 80); // Higher and further back for mobile
+        this.camera.lookAt(0, 0, 10); // Look slightly forward to see more track
+      } else {
+        this.camera.position.set(0, 25, 65);
+        this.camera.lookAt(0, 0, 0); // Look at the center of the track
+      }
     } else if (this.mode === 'player' && this.thirdPersonController) {
       this.thirdPersonController.update();
     } else if (this.mode === 'focus') {

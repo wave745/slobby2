@@ -31,8 +31,10 @@ export class Game {
   init() {
     // Create scene
     this.scene = new THREE.Scene();
-    // Create camera
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // Create camera with wider FOV for mobile
+    const isMobile = window.innerWidth <= 768;
+    const fov = isMobile ? 85 : 75; // Wider field of view for mobile
+    this.camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
     
     // Create renderer with optimization
     this.renderer = new THREE.WebGLRenderer({ 
