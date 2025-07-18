@@ -21,7 +21,9 @@
   "author": "SLOBBY2 Team",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^4.21.2",
+    "three": "^0.178.0",
+    "tween.js": "^16.6.0",
     "ws": "^8.14.2"
   },
   "engines": {
