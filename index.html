@@ -421,28 +421,37 @@
           margin-left: auto;
           margin-right: auto;
         }
+        
+        /* Mobile Race UI - Top left corner, compact */
         #raceUI {
+          position: fixed;
+          top: 10px;
+          left: 10px;
           width: auto;
-          max-width: calc(100vw - 40px);
+          max-width: 200px;
+          padding: 8px;
+          font-size: 12px;
+          z-index: 950;
         }
+        
+        /* Mobile Leaderboard - Bottom center, compact */
         #leaderboard {
           position: fixed;
-          top: auto;
           bottom: 160px; /* Above mobile controls */
-          left: 10px;
-          right: 10px;
-          width: auto;
-          max-height: 25vh;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 90vw;
+          max-width: 300px;
+          max-height: 120px;
           overflow-y: auto;
-          z-index: 900; /* Below mobile controls but above game */
+          z-index: 950;
+          padding: 8px;
+          font-size: 11px;
         }
+        
+        /* Hide chat on mobile to reduce clutter */
         #chatBox {
-          position: fixed;
-          bottom: 160px; /* Above mobile controls */
-          left: 10px;
-          width: calc(50vw - 15px);
-          height: 150px;
-          max-width: 250px;
+          display: none !important;
         }
         
         .snail-entry span:nth-child(2) {
@@ -454,28 +463,39 @@
           z-index: 1000 !important;
         }
         
-        /* Make UI more compact on mobile */
-        #raceUI {
-          padding: 10px;
-          font-size: 14px;
-        }
-        #leaderboard {
-          padding: 10px;
-          font-size: 14px;
-        }
-        #chatBox {
-          font-size: 12px;
-        }
-        
         /* Adjust leaderboard entries for mobile */
         .snail-entry {
-          padding: 3px;
-          margin: 2px 0;
-          font-size: 12px;
+          padding: 2px 4px;
+          margin: 1px 0;
+          font-size: 11px;
+          background: rgba(255, 255, 255, 0.05);
         }
         .token-icon {
-          width: 12px;
-          height: 12px;
+          width: 10px;
+          height: 10px;
+        }
+        
+        /* Make leaderboard header smaller */
+        #leaderboard h3 {
+          font-size: 14px;
+          margin: 0 0 5px 0;
+        }
+        
+        /* Make race UI more compact */
+        #raceTimer {
+          font-size: 14px;
+        }
+        #raceStatus {
+          font-size: 11px;
+        }
+        #spectatorCount {
+          font-size: 10px;
+          margin-top: 5px;
+        }
+        
+        /* Hide queue on mobile to save space */
+        #raceUI h4, #queueContent {
+          display: none !important;
         }
       }
     </style>
