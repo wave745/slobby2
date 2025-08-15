@@ -2,10 +2,11 @@ modules = ["nodejs-14", "web"]
 run = "npm run dev"
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-25_05"
+packages = ["solana-cli"]
 
 [deployment]
-run = ["sh", "-c", "npm start"]
+run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
 localPort = 3000
